@@ -7,8 +7,10 @@ if "%1"=="start" (
 ) else if "%1"=="install" (
     helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
     helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+) else if "%1"=="admin" (
+    kubectl create serviceaccount admin-user -n kubernetes-dashboard
 ) else if "%1"=="fix-forbidden" (
     kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
 ) else (
-    echo Usage: kubectl-admin {start^|token^|install^|fix-forbidden^|help}
+    echo Usage: kubectl-admin {start^|token^|install^|admin^|fix-forbidden^|help}
 )

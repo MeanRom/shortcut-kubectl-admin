@@ -15,6 +15,7 @@ All versions support the following commands:
 | `kubectl-admin start`         | Start port-forwarding for the Kubernetes Dashboard (localhost:8443 → dashboard:443) |
 | `kubectl-admin token`         | Generate an authentication token for the admin-user service account                 |
 | `kubectl-admin install`       | Install the Kubernetes Dashboard using Helm                                         |
+| `kubectl-admin admin`         | Create user for admin rights, by default 'admin-user'                               |
 | `kubectl-admin fix-forbidden` | Fix 403 Forbidden errors by creating cluster role binding for admin-user            |
 | `kubectl-admin help`          | Display help message with available commands                                        |
 
@@ -41,6 +42,7 @@ All versions support the following commands:
 kubectl-admin start
 kubectl-admin token
 kubectl-admin install
+kubectl-admin admin
 kubectl-admin fix-forbidden
 ```
 
@@ -78,6 +80,7 @@ kubectl-admin fix-forbidden
 kubectl-admin start
 kubectl-admin token
 kubectl-admin install
+kubectl-admin admin
 kubectl-admin fix-forbidden
 kubectl-admin help
 ```
@@ -120,6 +123,7 @@ kubectl-admin help
 kubectl-admin start
 kubectl-admin token
 kubectl-admin install
+kubectl-admin admin
 kubectl-admin fix-forbidden
 kubectl-admin help
 ```
@@ -152,6 +156,11 @@ kubectl-admin help
 
    ```bash
    kubectl-admin start
+   ```
+
+   **Create user for admin rights:**
+   ```bash
+   kubectl-admin admin
    ```
 
 4. **Get your access token:**

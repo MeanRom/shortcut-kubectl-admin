@@ -13,16 +13,20 @@ function kubectl-admin {
             helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
             helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
         }
+        "admin" {
+            kubectl create serviceaccount admin-user -n kubernetes-dashboard
+        }
         "fix-forbidden" {
             kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
         }
         "help" {
             Write-Host @"
-Usage: kubectl-admin {start|token|install|fix-forbidden|help}
+Usage: kubectl-admin {start|token|install|admin|fix-forbidden|help}
 -------
 start: Start the kubernetes-dashboard-kong-proxy service
 token: Get a token for the admin-user service account
 install: Install the kubernetes-dashboard
+admin: Create user for admin rights, by default 'admin-user'
 fix-forbidden: Fix the forbidden error
 help: Show this help message
 -------
