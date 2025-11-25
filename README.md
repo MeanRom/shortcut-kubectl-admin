@@ -1,23 +1,38 @@
-# kubectl-admin Shortcuts
+# Kubernetes Dashboard Shortcuts (`kube`)
 
 A collection of convenient shell scripts to manage Kubernetes Dashboard operations across different operating systems and shells.
 
 ## 📋 Overview
 
-This repository provides platform-specific scripts that implement the same `kubectl-admin` command with multiple subcommands for managing the Kubernetes Dashboard. Choose the appropriate file based on your operating system and shell environment.
+This repository provides platform-specific scripts that implement the same `kube` command with multiple subcommands for managing the Kubernetes Dashboard and kubectl contexts. Choose the appropriate file based on your operating system and shell environment.
 
 ## 🎯 Available Commands
 
 All versions support the following commands:
 
-| Command                       | Description                                                                         |
-| ----------------------------- | ----------------------------------------------------------------------------------- |
-| `kubectl-admin start`         | Start port-forwarding for the Kubernetes Dashboard (localhost:8443 → dashboard:443) |
-| `kubectl-admin token`         | Generate an authentication token for the admin-user service account                 |
-| `kubectl-admin install`       | Install the Kubernetes Dashboard using Helm                                         |
-| `kubectl-admin admin`         | Create user for admin rights, by default 'admin-user'                               |
-| `kubectl-admin fix-forbidden` | Fix 403 Forbidden errors by creating cluster role binding for admin-user            |
-| `kubectl-admin help`          | Display help message with available commands                                        |
+### Admin Commands
+
+| Command                    | Description                                                                         |
+| -------------------------- | ----------------------------------------------------------------------------------- |
+| `kube admin start`         | Start port-forwarding for the Kubernetes Dashboard (localhost:8443 → dashboard:443) |
+| `kube admin token`         | Generate an authentication token for the admin-user service account                 |
+| `kube admin token <name>`  | Generate an authentication token for a custom service account name                  |
+| `kube admin install`       | Install the Kubernetes Dashboard using Helm                                         |
+| `kube admin user`          | Create admin-user service account in kubernetes-dashboard namespace                 |
+| `kube admin user <name>`   | Create a custom-named service account in kubernetes-dashboard namespace             |
+| `kube admin fix-forbidden` | Fix 403 Forbidden errors by creating cluster role binding for admin-user            |
+
+### Context Commands
+
+| Command                 | Description                           |
+| ----------------------- | ------------------------------------- |
+| `kube switch <context>` | Switch to a different kubectl context |
+
+### Help
+
+| Command     | Description                            |
+| ----------- | -------------------------------------- |
+| `kube help` | Display help message with all commands |
 
 ## 🖥️ Platform-Specific Files
 
@@ -34,16 +49,18 @@ All versions support the following commands:
 **Installation:**
 
 1. Copy `kubectl-admin.bat` to a directory in your PATH (e.g., `C:\Windows\System32` or a custom bin folder)
-2. Alternatively, run from the current directory: `.\kubectl-admin.bat <command>`
+2. Alternatively, run from the current directory: `.\kubectl-admin.bat <command> <subcommand>`
 
 **Usage:**
 
 ```cmd
-kubectl-admin start
-kubectl-admin token
-kubectl-admin install
-kubectl-admin admin
-kubectl-admin fix-forbidden
+kube admin start
+kube admin token
+kube admin install
+kube admin user
+kube admin fix-forbidden
+kube switch my-context
+kube help
 ```
 
 ---
@@ -77,12 +94,15 @@ kubectl-admin fix-forbidden
 **Usage:**
 
 ```powershell
-kubectl-admin start
-kubectl-admin token
-kubectl-admin install
-kubectl-admin admin
-kubectl-admin fix-forbidden
-kubectl-admin help
+kube admin start
+kube admin token
+kube admin token my-custom-user
+kube admin install
+kube admin user
+kube admin user my-custom-user
+kube admin fix-forbidden
+kube switch production-cluster
+kube help
 ```
 
 ---
@@ -99,7 +119,8 @@ kubectl-admin help
 
 **Installation:**
 
-> [!IMPORTANT] > **Do NOT replace your existing `.zshrc` file!** Only append the function to your existing configuration.
+> [!IMPORTANT]
+> **Do NOT replace your existing `.zshrc` file!** Only append the function to your existing configuration.
 
 1. Open your existing `.zshrc` file:
    ```bash
@@ -110,7 +131,7 @@ kubectl-admin help
    code ~/.zshrc
    ```
 2. Scroll to the end of the file
-3. Copy lines 10-47 from the `.zshrc` file in this repository (the `kubectl-admin()` function)
+3. Copy lines 10-60 from the `.zshrc` file in this repository (the `kube()` function)
 4. Paste at the end of your `.zshrc`
 5. Save and reload your shell:
    ```bash
@@ -120,12 +141,15 @@ kubectl-admin help
 **Usage:**
 
 ```bash
-kubectl-admin start
-kubectl-admin token
-kubectl-admin install
-kubectl-admin admin
-kubectl-admin fix-forbidden
-kubectl-admin help
+kube admin start
+kube admin token
+kube admin token my-custom-user
+kube admin install
+kube admin user
+kube admin user my-custom-user
+kube admin fix-forbidden
+kube switch staging-cluster
+kube help
 ```
 
 ---
@@ -149,36 +173,57 @@ kubectl-admin help
 2. **Install the Kubernetes Dashboard:**
 
    ```bash
-   kubectl-admin install
+   kube admin install
    ```
 
-3. **Start the dashboard service:**
+3. **Create an admin user service account:**
 
    ```bash
-   kubectl-admin start
+   kube admin user
    ```
 
-   **Create user for admin rights:**
+4. **Start the dashboard service:**
+
    ```bash
-   kubectl-admin admin
+   kube admin start
    ```
 
-4. **Get your access token:**
+   > This command runs in the foreground. Keep the terminal open while using the dashboard.
+
+5. **Get your access token:**
+
    Open a new terminal window and run:
 
    ```bash
-   kubectl-admin token
+   kube admin token
    ```
 
-5. **Access the dashboard:**
-   Open your browser to `https://localhost:8443` and use the token from step 4
+   Copy the token output.
+
+6. **Access the dashboard:**
+
+   Open your browser to `https://localhost:8443` and paste the token from step 5 to log in.
 
 ### Troubleshooting
 
 If you encounter 403 Forbidden errors when accessing the dashboard:
 
 ```bash
-kubectl-admin fix-forbidden
+kube admin fix-forbidden
+```
+
+This creates a cluster role binding that grants cluster-admin privileges to the admin-user service account.
+
+### Working with Multiple Contexts
+
+To switch between different Kubernetes contexts:
+
+```bash
+# List available contexts
+kubectl config get-contexts
+
+# Switch to a specific context
+kube switch my-cluster-context
 ```
 
 ## 📝 Prerequisites
@@ -186,7 +231,7 @@ kubectl-admin fix-forbidden
 All scripts require the following tools to be installed:
 
 - `kubectl` - Kubernetes command-line tool
-- `helm` - Kubernetes package manager
+- `helm` - Kubernetes package manager (v3+)
 - An active Kubernetes cluster context
 
 ## 🔐 Security Note
@@ -194,16 +239,39 @@ All scripts require the following tools to be installed:
 > [!CAUTION]
 > The `fix-forbidden` command grants cluster-admin privileges to the dashboard service account. This is convenient for development but should **NOT** be used in production environments. Always follow the principle of least privilege in production.
 
+> [!WARNING]
+> The `admin user` command creates a service account without any permissions by default. You'll need to either use `fix-forbidden` to grant cluster-admin rights, or create a more restrictive role binding for production use.
+
+## 💡 Tips & Best Practices
+
+- **Custom Service Accounts**: Use the `<name>` parameter to create multiple service accounts with different permission levels
+
+  ```bash
+  kube admin user read-only-user
+  kube admin token read-only-user
+  ```
+
+- **Multiple Clusters**: Use `kube switch` to quickly change between development, staging, and production clusters
+
+- **Token Expiration**: Tokens are temporary and expire based on your cluster configuration. Simply run `kube admin token` again to generate a new one
+
+- **Port Forwarding**: The dashboard is only accessible while `kube admin start` is running. Consider using a terminal multiplexer like tmux or screen to keep it running in the background
+
 ## 📖 Additional Notes
 
 - The `start` command runs in the foreground and must remain active for the dashboard to be accessible
 - Press `Ctrl+C` to stop the port-forwarding
-- Tokens generated with `token` are temporary and expire based on your cluster's configuration
-- The dashboard will be accessible at `https://localhost:8443` (note: HTTPS, you may need to accept a self-signed certificate)
+- The dashboard will be accessible at `https://localhost:8443` (note: HTTPS, you may need to accept a self-signed certificate warning in your browser)
+- All commands that modify cluster resources (user, fix-forbidden) require appropriate kubectl permissions
 
 ## 🤝 Contributing
 
-Feel free to adapt these scripts for other shells (Bash, Fish, etc.) or improve existing functionality.
+Feel free to:
+
+- Adapt these scripts for other shells (Bash, Fish, etc.)
+- Add new subcommands or features
+- Improve error handling and user feedback
+- Submit pull requests with improvements
 
 ## 📄 License
 

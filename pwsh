@@ -1,39 +1,61 @@
-function kubectl-admin {
-    param([string]$Command)
-    
+function kube {
+    param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]$Command,
+
+        [Parameter(Position=1)]
+        [string]$SubCommand
+    )
+
     switch ($Command) {
-        "start" {
-            kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
-            Write-Host "Starting..."
-        }
-        "token" {
-            kubectl create token admin-user -n kubernetes-dashboard
-        }
-        "install" {
-            helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-            helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
-        }
         "admin" {
-            kubectl create serviceaccount admin-user -n kubernetes-dashboard
+            switch ($SubCommand) {
+                "start" {
+                    kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+                }
+                "token" {
+                    if ([string]::IsNullOrEmpty($SubCommand)) {
+                        kubectl create token admin-user -n kubernetes-dashboard
+                    } else {
+                        kubectl create token $SubCommand -n kubernetes-dashboard
+                    }
+                }
+                "install" {
+                    helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+                    helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+                }
+                "user" {
+                    if ([string]::IsNullOrEmpty($SubCommand)) {
+                        kubectl create serviceaccount admin-user -n kubernetes-dashboard
+                    } else {
+                        kubectl create serviceaccount $SubCommand -n kubernetes-dashboard
+                    }
+                }
+                "fix-forbidden" {
+                    kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+                }
+                default {
+                    Write-Host "Usage: kube admin {start|token|install|user|fix-forbidden} | use the command 'kube help' for more information"
+                }
+            }
         }
-        "fix-forbidden" {
-            kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+        "switch" {
+            kubectl config use-context "$SubCommand"
         }
-        "help" {
+        default { # Covers "help" and any other default/invalid command
             Write-Host @"
-Usage: kubectl-admin {start|token|install|admin|fix-forbidden|help}
+Usage: kube {admin|switch|help}
 -------
-start: Start the kubernetes-dashboard-kong-proxy service
-token: Get a token for the admin-user service account
-install: Install the kubernetes-dashboard
-admin: Create user for admin rights, by default 'admin-user'
-fix-forbidden: Fix the forbidden error
-help: Show this help message
+admin start: Start the kubernetes-dashboard service
+admin token: Get a token for admin-user
+admin token <name>: Get a token for admin-user with a custom name
+admin user: Create admin-user service account
+admin user <name>: Create admin-user service account with a custom name
+admin install: Install the kubernetes-dashboard
+admin fix-forbidden: Fix forbidden errors
+switch <context>: Switch kubectl context
 -------
 "@
-        }
-        default {
-            Write-Host "Usage: kubectl-admin {start|token|install|fix-forbidden|help}"
         }
     }
 }

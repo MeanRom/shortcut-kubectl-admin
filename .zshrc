@@ -8,43 +8,52 @@
 
 
 # Shortcut Kubectl commands
-kubectl-admin() {
+kube() {
   case "$1" in
-    start)
-      kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
-      ;;
-    token)
-      kubectl create token admin-user -n kubernetes-dashboard
-      ;;
-    install)
-      helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/ && helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
-      ;;
     admin)
-      kubectl create serviceaccount admin-user -n kubernetes-dashboard
+      case "$2" in
+        start)
+          kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+          ;;
+        token)
+        if [ -z "$2" ]; then
+          kubectl create token admin-user -n kubernetes-dashboard
+          else
+          kubectl create token $2 -n kubernetes-dashboard
+          fi
+          ;;
+        install)
+          helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/ && helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+          ;;
+        user)
+        if [ -z "$2" ]; then
+          kubectl create serviceaccount admin-user -n kubernetes-dashboard
+          else
+          kubectl create serviceaccount $2 -n kubernetes-dashboard
+          fi
+          ;;
+        fix-forbidden)
+          kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+          ;;
+        *)
+          echo "Usage: fk3d admin {start|token|install|user|fix-forbidden} | use the command 'fk3d help' for more information"
+          ;;
+      esac
       ;;
-    fix-forbidden)
-      kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+    switch)
+      kubectl config use-context "$2"
       ;;
-    help)
-      echo "Usage: kubectl-admin {start|token|install|fix-forbidden|help}
+    help|*)
+      echo "Usage: fk3d {admin|switch|help}
 	  -------
-	  start: Start the kubernetes-dashboard-kong-proxy service
-	  token: Get a token for the admin-user service account
-	  admin: Create user for admin rights, by default 'admin-user'
-	  install: Install the kubernetes-dashboard
-	  fix-forbidden: Fix the forbidden error
-	  help: Show this help message
-	  -------"
-      ;;
-    *)
-      echo "Usage: kubectl-admin {start|token|install|fix-forbidden|help}
-	  -------
-	  start: Start the kubernetes-dashboard-kong-proxy service
-	  token: Get a token for the admin-user service account
-	  admin: Create user for admin rights, by default 'admin-user'
-	  install: Install the kubernetes-dashboard
-	  fix-forbidden: Fix the forbidden error
-	  help: Show this help message
+	  admin start: Start the kubernetes-dashboard service
+	  admin token: Get a token for admin-user
+	  admin token <name>: Get a token for admin-user with a custom name
+	  admin user: Create admin-user service account
+	  admin user <name>: Create admin-user service account with a custom name
+	  admin install: Install the kubernetes-dashboard
+	  admin fix-forbidden: Fix forbidden errors
+	  switch <context>: Switch kubectl context
 	  -------"
       ;;
   esac
