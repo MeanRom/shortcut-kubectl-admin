@@ -26,6 +26,7 @@ All versions support the following commands:
 
 | Command                 | Description                           |
 | ----------------------- | ------------------------------------- |
+| `kube list`             | List all available kubectl contexts   |
 | `kube switch <context>` | Switch to a different kubectl context |
 
 ### Help
@@ -59,6 +60,7 @@ kube admin token
 kube admin install
 kube admin user
 kube admin fix-forbidden
+kube list
 kube switch my-context
 kube help
 ```
@@ -101,6 +103,7 @@ kube admin install
 kube admin user
 kube admin user my-custom-user
 kube admin fix-forbidden
+kube list
 kube switch production-cluster
 kube help
 ```
@@ -119,8 +122,7 @@ kube help
 
 **Installation:**
 
-> [!IMPORTANT]
-> **Do NOT replace your existing `.zshrc` file!** Only append the function to your existing configuration.
+> [!IMPORTANT] > **Do NOT replace your existing `.zshrc` file!** Only append the function to your existing configuration.
 
 1. Open your existing `.zshrc` file:
    ```bash
@@ -148,6 +150,7 @@ kube admin install
 kube admin user
 kube admin user my-custom-user
 kube admin fix-forbidden
+kube list
 kube switch staging-cluster
 kube help
 ```
@@ -220,7 +223,7 @@ To switch between different Kubernetes contexts:
 
 ```bash
 # List available contexts
-kubectl config get-contexts
+kube list
 
 # Switch to a specific context
 kube switch my-cluster-context

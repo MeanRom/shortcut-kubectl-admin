@@ -40,19 +40,27 @@ kube() {
           ;;
       esac
       ;;
+    list)
+      kubectl config get-contexts
+      ;;
     switch)
       kubectl config use-context "$2"
       ;;
     help|*)
-      echo "Usage: fk3d {admin|switch|help}
+      echo "Usage: fk3d {admin|list|switch|help}
 	  -------
 	  admin start: Start the kubernetes-dashboard service
-	  admin token: Get a token for admin-user
+	  
+    admin token: Get a token for admin-user
 	  admin token <name>: Get a token for admin-user with a custom name
-	  admin user: Create admin-user service account
+	  
+    admin user: Create admin-user service account
 	  admin user <name>: Create admin-user service account with a custom name
-	  admin install: Install the kubernetes-dashboard
+	  
+    admin install: Install the kubernetes-dashboard
 	  admin fix-forbidden: Fix forbidden errors
+
+    list: List all available kubectl contexts
 	  switch <context>: Switch kubectl context
 	  -------"
       ;;

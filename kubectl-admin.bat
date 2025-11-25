@@ -23,6 +23,8 @@ if "%1"=="admin" (
     ) else (
         echo Usage: %~n0 admin {start^|token^|install^|user^|fix-forbidden} ^| use the command '%~n0 help' for more information
     )
+) else if "%1"=="list" (
+    kubectl config get-contexts
 ) else if "%1"=="switch" (
     if not "%2"=="" (
         kubectl config use-context "%2"
@@ -30,16 +32,21 @@ if "%1"=="admin" (
         echo Usage: %~n0 switch ^<context^>
     )
 ) else (
-    echo Usage: %~n0 {admin^|switch^|help}
+    echo Usage: %~n0 {admin^|list^|switch^|help}
     echo.
     echo -------
     echo    admin start: Start the kubernetes-dashboard service
+    echo
     echo    admin token: Get a token for admin-user
     echo    admin token ^<name^>: Get a token for admin-user with a custom name
+    echo
     echo    admin user: Create admin-user service account
     echo    admin user ^<name^>: Create admin-user service account with a custom name
+    echo
     echo    admin install: Install the kubernetes-dashboard
     echo    admin fix-forbidden: Fix forbidden errors
+    echo
+    echo    list: List all available kubectl contexts
     echo    switch ^<context^>: Switch kubectl context
     echo -------
 )
