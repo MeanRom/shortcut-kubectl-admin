@@ -39,7 +39,7 @@ All versions support the following commands:
 
 ### Windows (Command Prompt)
 
-**File:** [`kubectl-admin.bat`](file:///Users/thomasmoerman/Documents/plugins/shortcut-kubectl-admin/kubectl-admin.bat)
+**File:** [`kube.bat`](file:///Users/thomasmoerman/Documents/plugins/shortcut-kubectl-admin/kube.bat)
 
 **Use when:**
 
@@ -49,8 +49,8 @@ All versions support the following commands:
 
 **Installation:**
 
-1. Copy `kubectl-admin.bat` to a directory in your PATH (e.g., `C:\Windows\System32` or a custom bin folder)
-2. Alternatively, run from the current directory: `.\kubectl-admin.bat <command> <subcommand>`
+1. Copy `kube.bat` to a directory in your PATH (e.g., `C:\Windows\System32` or a custom bin folder)
+2. Alternatively, run from the current directory: `.\kube.bat <command> <subcommand>`
 
 **Usage:**
 
@@ -165,7 +165,7 @@ kube help
 
 | Operating System | Shell/Environment | File to Use               |
 | ---------------- | ----------------- | ------------------------- |
-| Windows          | Command Prompt    | `kubectl-admin.bat`       |
+| Windows          | Command Prompt    | `kube.bat`                |
 | Windows          | PowerShell        | `pwsh`                    |
 | macOS            | Zsh (default)     | `.zshrc`                  |
 | macOS            | PowerShell        | `pwsh`                    |
