@@ -16,20 +16,20 @@ kube() {
           kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
           ;;
         token)
-        if [ -z "$2" ]; then
+        if [ -z "$3" ]; then
           kubectl create token admin-user -n kubernetes-dashboard
           else
-          kubectl create token $2 -n kubernetes-dashboard
+          kubectl create token $3 -n kubernetes-dashboard
           fi
           ;;
         install)
           helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/ && helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
           ;;
         user)
-        if [ -z "$2" ]; then
+        if [ -z "$3" ]; then
           kubectl create serviceaccount admin-user -n kubernetes-dashboard
           else
-          kubectl create serviceaccount $2 -n kubernetes-dashboard
+          kubectl create serviceaccount $3 -n kubernetes-dashboard
           fi
           ;;
         fix-forbidden)
