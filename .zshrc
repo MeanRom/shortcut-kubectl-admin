@@ -39,7 +39,6 @@ kube() {
           kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:$3
           fi
           ;;
-          ;;
         *)
           echo "Usage: fk3d admin {start|token|install|user|fix-forbidden} | use the command 'fk3d help' for more information"
           ;;
