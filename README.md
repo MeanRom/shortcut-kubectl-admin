@@ -2,9 +2,18 @@
 
 A collection of convenient shell scripts to manage Kubernetes Dashboard operations across different operating systems and shells.
 
+## Contents
+
+- `kube.bat`: Windows Command Prompt version
+- `pwsh`: PowerShell function for Windows, macOS, and Linux
+- `.zshrc`: Zsh function snippet to append to your own `~/.zshrc`
+- `CHANGELOG.md`: Timeline of updates pulled from git history (see newest notes there)
+
 ## 📋 Overview
 
 This repository provides platform-specific scripts that implement the same `kube` command with multiple subcommands for managing the Kubernetes Dashboard and kubectl contexts. Choose the appropriate file based on your operating system and shell environment.
+
+See `CHANGELOG.md` for a quick view of what has changed between updates.
 
 ## 🎯 Available Commands
 
@@ -39,7 +48,7 @@ All versions support the following commands:
 
 ### Windows (Command Prompt)
 
-**File:** [`kube.bat`](file:///Users/thomasmoerman/Documents/plugins/shortcut-kubectl-admin/kube.bat)
+**File:** `kube.bat`
 
 **Use when:**
 
@@ -69,7 +78,7 @@ kube help
 
 ### Windows/macOS/Linux (PowerShell)
 
-**File:** [`pwsh`](file:///Users/thomasmoerman/Documents/plugins/shortcut-kubectl-admin/pwsh)
+**File:** `pwsh`
 
 **Use when:**
 
@@ -112,7 +121,7 @@ kube help
 
 ### macOS/Linux (Zsh)
 
-**File:** [`.zshrc`](file:///Users/thomasmoerman/Documents/plugins/shortcut-kubectl-admin/.zshrc)
+**File:** `.zshrc`
 
 **Use when:**
 
@@ -122,7 +131,8 @@ kube help
 
 **Installation:**
 
-> [!IMPORTANT] > **Do NOT replace your existing `.zshrc` file!** Only append the function to your existing configuration.
+> [!IMPORTANT]
+> **Do NOT replace your existing `.zshrc` file.** Copy only the `kube()` function from this repository’s `.zshrc` and append it to your own config.
 
 1. Open your existing `.zshrc` file:
    ```bash
@@ -132,10 +142,9 @@ kube help
    # or
    code ~/.zshrc
    ```
-2. Scroll to the end of the file
-3. Copy lines 10-60 from the `.zshrc` file in this repository (the `kube()` function)
-4. Paste at the end of your `.zshrc`
-5. Save and reload your shell:
+2. Copy the `kube()` function from this repository’s `.zshrc`
+3. Paste it at the end of your own `~/.zshrc`
+4. Save and reload your shell:
    ```bash
    source ~/.zshrc
    ```

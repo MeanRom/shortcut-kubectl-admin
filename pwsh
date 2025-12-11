@@ -32,7 +32,11 @@ function kube {
                     }
                 }
                 "fix-forbidden" {
-                    kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+                    if ([string]::IsNullOrEmpty($SubCommand)) {
+                        kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+                    } else {
+                        kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:$SubCommand
+                    }
                 }
                 default {
                     Write-Host "Usage: kube admin {start|token|install|user|fix-forbidden} | use the command 'kube help' for more information"

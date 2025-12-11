@@ -19,7 +19,11 @@ if "%1"=="admin" (
             kubectl create serviceaccount %3 -n kubernetes-dashboard
         )
     ) else if "%2"=="fix-forbidden" (
-        kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+        if "%3"=="" (
+            kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user
+        ) else (
+            kubectl create clusterrolebinding admin-user-binding --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:%3
+        )
     ) else (
         echo Usage: %~n0 admin {start^|token^|install^|user^|fix-forbidden} ^| use the command '%~n0 help' for more information
     )
